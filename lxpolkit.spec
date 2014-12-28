@@ -17,7 +17,7 @@ Source0:	http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
 # Source0-md5:	2597b00035fe1d695219e0f9bfa8c26f
 # FIXME: check url, if site cames back online
 URL:		http://wiki.lxde.org/en/LXPolkit
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 %{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.12.0}
 %{?with_gtk3:BuildRequires:	gtk+3-devel}
 BuildRequires:	intltool
