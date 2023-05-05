@@ -1,32 +1,32 @@
+# NOTE: obsoleted by lxsession >= 0.4.9
 #
 # Conditional build:
-%bcond_with		gtk3		# build GTK+3 disables GTK+2
-%bcond_without		gtk2	# build with GTK+2
+%bcond_with	gtk3	# use GTK+3 instead of GTK+2
 
-%if %{with gtk3}
-%undefine	with_gtk2
-%endif
-
-Summary:	LXPolkit is a simple PolicyKit authentication agent
+Summary:	LXPolkit - a simple PolicyKit authentication agent
+Summary(pl.UTF-8):	LXPolkit - prosty agent uwierzytelniania PolicyKit
 Name:		lxpolkit
 Version:	0.1.0
-Release:	1
+Release:	1.1
 License:	GPL v3
 Group:		X11/Applications
-Source0:	http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
+Source0:	https://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
 # Source0-md5:	2597b00035fe1d695219e0f9bfa8c26f
-# FIXME: check url, if site cames back online
-URL:		http://wiki.lxde.org/en/LXPolkit
+URL:		http://www.lxde.org/
 BuildRequires:	gettext-tools
-%{?with_gtk2:BuildRequires:	gtk+2-devel >= 2:2.12.0}
+%{!?with_gtk3:BuildRequires:	gtk+2-devel >= 2:2.12.0}
 %{?with_gtk3:BuildRequires:	gtk+3-devel}
-BuildRequires:	intltool
+BuildRequires:	intltool >= 0.40.0
 BuildRequires:	pkgconfig
 BuildRequires:	polkit-devel
+%{!?with_gtk3:Requires:	gtk+2 >= 2:2.12.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 LXPolkit is a simple PolicyKit authentication agent.
+
+%description -l pl.UTF-8
+LXPolkit to prosty agent uwierzytelniania PolicyKit.
 
 %prep
 %setup -q
@@ -38,10 +38,16 @@ LXPolkit is a simple PolicyKit authentication agent.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/tt_RU
+# unify name
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/locale/{tt_RU,tt}
+# not supported by glibc
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/frp
+# just a copy of ur
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/ur_PK
 
 %find_lang %{name}
 
